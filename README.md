@@ -1,1 +1,4 @@
-compilar fichero con: g++ *.cpp
+#PCSA/HyperLogLog
+
+compilar fichero con: g++ *.cpp -std=c++11
+
