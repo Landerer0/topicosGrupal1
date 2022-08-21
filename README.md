@@ -1,0 +1,1 @@
+compilar fichero con: g++ *.cpp
