@@ -1,15 +1,22 @@
 #include <iostream>
 #include <stdlib.h>
 #include <string>
+#include <fstream>
+
 #include "kmer.hpp"
-#include "sketch.hpp"
+#include "pcsa.hpp"
 
 using namespace std;
 
 const unsigned int Buckets = 4;
 
+// Importante: hash<string> usa 8 bytes
+
 int main() {
-    Sketch PCSA(Buckets);
+    PCSA pcsa(Buckets);
+    pcsa.showSketch();
+    return 0;
+
     Kmer kmer("ATTACG");
     cout << kmer.genoma() << endl;
     string s = "Lucas";

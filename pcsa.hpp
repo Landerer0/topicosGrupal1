@@ -1,16 +1,19 @@
 #include <stdlib.h>
 #include <string>
+#include <vector>
 
 using namespace std;
 
-class Sketch {
+class PCSA {
     private:
-        unsigned char* sketch;
+        vector<unsigned char> sketch;
         unsigned int buckets;
-        unsigned char* createBucketSpace(); // solo deberia ser llamada para asignar espacio de sketch
     public:
-        Sketch(unsigned int M);
-        ~Sketch();
+        PCSA(unsigned int M);
+        ~PCSA();
         void update(string); // se ingresa un kmer y se actualizan los valores del kmer
         unsigned long long estimate(); // se estima el valor de elementos actuales
+        
+        
+        void showSketch(); // auxiliar para poder imprimir el contenido del sketch
 };
