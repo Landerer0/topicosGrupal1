@@ -8,7 +8,7 @@ PCSA::PCSA(unsigned int M){
     buckets = M; // almaceno el valor de buckets por si llega a ser necesario
     sketch.assign(M, 0); // inicializo el sketch con M buckets con el valor de 0
     logBuckets = (int)ceil(log2(buckets));
-    cerr << "log buckets: " << logBuckets << endl;
+    //cerr << "log buckets: " << logBuckets << endl;
 }
 
 PCSA::~PCSA(){
@@ -19,7 +19,7 @@ void PCSA::update(string kmer){
     auto valorHash = hash<string>{}(kmer);
 
     // sobre el valor hash calcular el bucket correspondiente, 64 = 8*sizeof(valorHash) 
-    unsigned char bucketCorrespondiente = (valorHash >> (64 - logBuckets)) - 1;
+    unsigned char bucketCorrespondiente = (valorHash >> (64 - logBuckets));
     //cerr << (int)bucketCorrespondiente << endl;
 
     // actualizar el valor del sketch
