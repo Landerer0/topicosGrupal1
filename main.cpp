@@ -10,6 +10,13 @@ using namespace std;
 
 const unsigned int Buckets = 4;
 
+void pruebaCaracter(char caracter, Kmer &kmer, PCSA &pcsa){
+    kmer.pushBack(caracter);
+    cout << kmer.genoma() << endl;
+    pcsa.update(kmer.genoma());
+    pcsa.showSketch();
+}
+
 // Importante: hash<string> usa 8 bytes
 
 int main() {
@@ -22,14 +29,11 @@ int main() {
     pcsa.update(kmer.genoma());
     pcsa.showSketch();
 
-    kmer.pushBack('G');
-    cout << kmer.genoma() << endl;
-    pcsa.update(kmer.genoma());
-    pcsa.showSketch();
-    kmer.pushBack('T');
-    cout << kmer.genoma() << endl;
-    pcsa.update(kmer.genoma());
-    pcsa.showSketch();
+    pruebaCaracter('G', kmer, pcsa);
+    pruebaCaracter('C', kmer, pcsa);
+    pruebaCaracter('T', kmer, pcsa);
+    pruebaCaracter('A', kmer, pcsa);
+    pruebaCaracter('C', kmer, pcsa);
     
     // Kmer kmer("ATTACG");
     // cout << kmer.genoma() << endl;

@@ -16,7 +16,7 @@ PCSA::~PCSA(){
 
 void PCSA::update(string kmer){
     // calcular valor hash
-    auto valorHash = hash<string>{}(kmer);
+    unsigned long long valorHash = hash<string>{}(kmer);
 
     // sobre el valor hash calcular el bucket correspondiente, 64 = 8*sizeof(valorHash) 
     unsigned char bucketCorrespondiente = (valorHash >> (64 - logBuckets));
@@ -25,8 +25,10 @@ void PCSA::update(string kmer){
     // actualizar el valor del sketch
     sketch.at(bucketCorrespondiente) = sketch.at(bucketCorrespondiente) | 
                 ( (valorHash << logBuckets) >> logBuckets); // hago shifting para eliminar bits de hashing
-    //cerr << valorHash << endl;    
-    //cerr << ( (valorHash << logBuckets) >> logBuckets) << endl;
+
+    // cerr << "Kmer: " << kmer << endl << "Valor hash:" << valorHash << endl 
+    //         << "valor a ingresar en el bucket " << (int)bucketCorrespondiente << ": " 
+    //         << (unsigned long long)( (valorHash << logBuckets) >> logBuckets) << endl;
 
     return;
 }
@@ -35,7 +37,7 @@ void PCSA::showSketch(){
     cout << "Sketch: ";
     auto it = sketch.begin();
     for(it; it != sketch.end(); it++) {
-        cout << (unsigned int) *it << " ";
+        cout << (unsigned long long) *it << " ";
     }
     cout << endl;
 }
