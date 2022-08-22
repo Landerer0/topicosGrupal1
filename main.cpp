@@ -15,17 +15,32 @@ const unsigned int Buckets = 4;
 int main() {
     PCSA pcsa(Buckets);
     pcsa.showSketch();
-    return 0;
 
+    string s = "Lucas";
     Kmer kmer("ATTACG");
     cout << kmer.genoma() << endl;
-    string s = "Lucas";
+    pcsa.update(kmer.genoma());
+    pcsa.showSketch();
+
     kmer.pushBack('G');
     cout << kmer.genoma() << endl;
+    pcsa.update(kmer.genoma());
+    pcsa.showSketch();
     kmer.pushBack('T');
     cout << kmer.genoma() << endl;
-    cout << "String: " << s << endl;
-    cout << "Hash: " << hash<string>{}(s) << '\n';
-    cout << sizeof(hash<string>{}(s)) << endl;
+    pcsa.update(kmer.genoma());
+    pcsa.showSketch();
+    
+    // Kmer kmer("ATTACG");
+    // cout << kmer.genoma() << endl;
+    // string s = "Lucas";
+    // kmer.pushBack('G');
+    // cout << kmer.genoma() << endl;
+    // kmer.pushBack('T');
+    // cout << kmer.genoma() << endl;
+    // cout << "String: " << s << endl;
+    // cout << "Hash: " << hash<string>{}(s) << '\n';
+    // cout << sizeof(hash<string>{}(s)) << endl;
+
     return 0;
 }

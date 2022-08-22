@@ -6,8 +6,9 @@ using namespace std;
 
 class PCSA {
     private:
-        vector<unsigned char> sketch;
+        vector<unsigned long long> sketch;
         unsigned int buckets;
+        int logBuckets; // ¿DEBERIA SER STATIC? REVISAR PQ COMPILADOR ME TIRA PROBLEMAS
     public:
         PCSA(unsigned int M);
         ~PCSA();
