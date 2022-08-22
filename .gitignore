@@ -1,2 +1,5 @@
 # Ignorar la carpeta .vscode
 .vscode
+
+# Ignorar ejecutable
+a.exe

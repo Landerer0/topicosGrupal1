@@ -4,6 +4,8 @@
 #include <math.h>
 #include <vector>
 
+const double phi = 0.77351;
+
 PCSA::PCSA(unsigned int M){
     buckets = M; // almaceno el valor de buckets por si llega a ser necesario
     sketch.assign(M, 0); // inicializo el sketch con M buckets con el valor de 0
@@ -22,13 +24,11 @@ void PCSA::update(string kmer){
     unsigned char bucketCorrespondiente = (valorHash >> (64 - logBuckets));
     //cerr << (int)bucketCorrespondiente << endl;
 
-    // actualizar el valor del sketch
-    sketch.at(bucketCorrespondiente) = sketch.at(bucketCorrespondiente) | 
-                ( (valorHash << logBuckets) >> logBuckets); // hago shifting para eliminar bits de hashing
+    unsigned long long bitsSketch = ( (valorHash << logBuckets) >> logBuckets); // bits a usar del valor hash
+    unsigned long long rHash = ~bitsSketch & (bitsSketch + 1); // obtiene el valor para realizar update del sketch
 
-    // cerr << "Kmer: " << kmer << endl << "Valor hash:" << valorHash << endl 
-    //         << "valor a ingresar en el bucket " << (int)bucketCorrespondiente << ": " 
-    //         << (unsigned long long)( (valorHash << logBuckets) >> logBuckets) << endl;
+    // actualizar el valor del sketch
+    sketch.at(bucketCorrespondiente) = sketch.at(bucketCorrespondiente) | rHash;
 
     return;
 }
@@ -43,6 +43,16 @@ void PCSA::showSketch(){
 }
 
 unsigned long long PCSA::estimate(){
-    unsigned long long estimate;
-    return estimate;
+    // se calcula la suma de los primeros '1's a la derecha de todos los bins
+    unsigned long long suma = 0;
+    for(int i=0; i<buckets;i++){
+        if(sketch.at(i) == 0) continue; // si el valor es 0 el conteo da 64, por lo que se salta
+        suma += __builtin_ctzll(sketch.at(i)); // aqui se debe hacer el count de los ceros
+    }
+
+    // se calula media simple
+    double media = 1.0 * suma / buckets;
+
+    // formula para entregar el valor de la estimacion
+    return buckets*pow(2,media)/phi;
 }
