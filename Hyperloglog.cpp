@@ -1,32 +1,47 @@
-#include<iostream>
-#include<vector>
-#include<cmath>
+#include "Hyperloglog.hpp"
 
-typedef unsigned long long ull;
+Hyperloglog::Hyperloglog(unsigned int M){
+  this.M = M;
+  sketch.assign(M, 0);
+}
 
-using namespace std;
+Hyperloglog::~Hyperloglog(){ 
+}
 
-//tal vez usar u_int32
-int M = 5;
+float Hyperloglog::alpha_m(){
+  float phi = 0.7213/(1 + (1.079/M));
+  return phi;
+}
 
-//se necesita solo 6 bits por bucket
-vector<uint8_t> sketch(M);
-
-//p: bits mas significativos
-//b: bits menos significativos
-
-for(string kmer : stream){
+void Hyperloglog::update_sketch(string kmer){
+  //p: bits mas significativos
+  //b: bits menos significativos
   ull h_kmer = hash<string>{}(kmer);
 
   int log_m = (int)ceil(log2(M));
 
-  unsigned char p = (h_kmer >> (64 - log_m))
+  uc p = (h_kmer >> (64 - log_m))
   ull b = (h_kmer << log_m) >> log_m;
 
-  uint8_t first_one_bit = __builtin_ctz(b) + 1;
+  uc first_one_bit = __builtin_ctzll(b);
   sketch[p] = max(sketch[p], first_one_bit)
 }
 
-int mean = reduce(sketch.begin(), sketch.end())/M;
-float count = pow(2, mean) * 0.78;
+uc Hyperloglog::bucket_value(unsigned int i){
+  return sketch[i];
+}
+
+ull Hyperloglog::estimate(/* Stream S */){
+  for(string kmer : S)
+    update_sketch(kmer);
+  float Z = 0;
+  for(uc bucket : sketch) Z += 1/pow(2,(int)bucket);//no estoy seguro si castear a int
+  float E = this.M * this.M * Z * alpha_m(); //dudas acerca del tipo de dato
+  return (ull)E; //ull truncara?
+}
+
+void Hyperloglog::union(Hyperloglog hll){
+  for(int i = 0; i < M; i++)
+    sketch[i] = max(sketch[i], hll.bucket_value(i));
+}
 
