@@ -22,7 +22,7 @@ void pruebaCaracter(char caracter, Kmer &kmer, PCSA &pcsa){
 
 // Importante: hash<string> usa 8 bytes
 
-int main() {
+int main(int argc, char *argv[]) {
     // vector<unsigned long long> numeros;
     // numeros.push_back(0);
     // numeros.push_back(1);
@@ -41,6 +41,14 @@ int main() {
     // cerr << pow(2,3) << " " << pow(2, 10);
 
     // return 0;
+    //
+    ifstream file(argv[1]); //el archivo se entrega como argumento
+    int k = 3; //tamaño del kmer
+    vector<string> gnm;
+    string str;
+    while(file.width(k), file>>str){
+      gnm.push_back(str);
+    }
 
     PCSA pcsa(Buckets);
     pcsa.showSketch();
