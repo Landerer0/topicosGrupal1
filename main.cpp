@@ -45,9 +45,11 @@ int main(int argc, char *argv[]) {
     ifstream file(argv[1]); //el archivo se entrega como argumento
     int k = 3; //tamaño del kmer
     vector<string> gnm;
-    string str;
-    while(file.width(k), file>>str){
-      gnm.push_back(str);
+    char str[k];
+    while(file.read(str,k)){
+      for(int i = 0; i < k-1; i++) file.unget();
+      string aux(str);
+      gnm.push_back(aux);
     }
 
     PCSA pcsa(Buckets);

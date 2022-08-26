@@ -31,9 +31,8 @@ uc Hyperloglog::bucket_value(unsigned int i){
   return sketch[i];
 }
 
-ull Hyperloglog::estimate(/* Stream S */){
-  vector<string> S;
-  for(string kmer : S)
+ull Hyperloglog::estimate(vector<strin> stream){
+  for(string kmer : stream)
     update_sketch(kmer);
   float Z = 0;
   for(uc bucket : sketch) Z += 1/pow(2,(int)bucket);//no estoy seguro si castear a int
