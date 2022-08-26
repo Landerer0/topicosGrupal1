@@ -18,5 +18,5 @@ class Hyperloglog{
     ~Hyperloglog();
     uc bucket_value(unsigned int i);
     ull estimate(/* Stream S*/); 
-    void union(Hyperloglog hl); //el objeto donde se llama el metodo union se utiliza para almacenar la union entre ambos sketches
+    void union_sk(Hyperloglog hll); //el objeto donde se llama el metodo union se utiliza para almacenar la union entre ambos sketches
 };
