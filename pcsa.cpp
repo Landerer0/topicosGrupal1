@@ -56,3 +56,24 @@ unsigned long long PCSA::estimate(){
     // formula para entregar el valor de la estimacion
     return buckets*pow(2,media)/phi;
 }
+
+void PCSA::merge(PCSA &pcsa){
+    if(buckets == pcsa.buckets){
+        for(int i=0;i<buckets;i++){
+            sketch.at(i) = sketch.at(i) | pcsa.sketch.at(i);
+        }
+    }
+    
+    return;
+}
+
+
+void PCSA::intersection(PCSA &pcsa){
+    if(buckets == pcsa.buckets){
+        for(int i=0;i<buckets;i++){
+            sketch.at(i) = sketch.at(i) & pcsa.sketch.at(i);
+        }
+    }
+    
+    return;
+}
