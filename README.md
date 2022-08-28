@@ -1,4 +1,4 @@
-#PCSA/HyperLogLog
+# PCSA/HyperLogLog
 Estimación de cardinalidad para un stream utilizando PCSA y HyperLogLog.
 
 ## Compilación
