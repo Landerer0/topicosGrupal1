@@ -13,9 +13,7 @@ float Hyperloglog::alpha_m(){
   return phi;
 }
 
-void Hyperloglog::update_sketch(string kmer){
-  //p: bits mas significativos
-  //b: bits menos significativos
+void Hyperloglog::update(string kmer){
   ull h_kmer = std::hash<std::string>{}(kmer);
 
   int log_m = (int)ceil(log2(M));
@@ -31,12 +29,24 @@ uc Hyperloglog::bucket_value(unsigned int i){
   return sketch[i];
 }
 
-ull Hyperloglog::estimate(vector<strin> stream){
-  for(string kmer : stream)
-    update_sketch(kmer);
+ull Hyperloglog::estimate(){
   float Z = 0;
-  for(uc bucket : sketch) Z += 1/pow(2,(int)bucket);//no estoy seguro si castear a int
+  unsigned int V = 0;
+  for(uc bucket : sketch){
+    Z += 1/pow(2,(int)bucket);
+    if((int)bucket == 0) V++;
+  }
   float E = this->M * this->M * Z * alpha_m(); //dudas acerca del tipo de dato
+  if((E <= (5/2)*this->M) && V != 0){
+    cout<<"M: "<<M<<" V: "<<V<<" log: "<<log2(M/V)<<endl;
+    E = this->M * log2(this->M/V);
+  }
+
+  /* da error
+  if(E > ((1/30) * (1LL << 32)))
+    E = -1 * (1LL << 32) * log2(1 - (E/(1LL << 32)));
+    */
+
   return (ull)E; //ull truncara?
 }
 

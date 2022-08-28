@@ -3,13 +3,17 @@
 #include <string>
 #include <fstream>
 #include <math.h>
+#include <algorithm>
+#include <unordered_set>
 
 #include "kmer.hpp"
 #include "pcsa.hpp"
+#include "Hyperloglog.hpp"
 
 using namespace std;
 
-const unsigned int Buckets = 4;
+const unsigned int Buckets = 16;
+const unsigned int k = 32; //tamaño del kmer
 
 void pruebaCaracter(char caracter, Kmer &kmer, PCSA &pcsa){
     kmer.pushBack(caracter);
@@ -20,56 +24,68 @@ void pruebaCaracter(char caracter, Kmer &kmer, PCSA &pcsa){
     cerr << "estimacion: " << estimacion << endl;
 }
 
+template <typename T> T readStream(unordered_set<string> &gt, ifstream &file, unsigned int size){
+    T estimator(size);
+ //Archivo -> vector de kmers
+    for(string line; getline(file, line);){
+      line.erase(std::remove(line.begin(), line.end(), 'N'), line.end());
+      for(int i = 0; i <= line.size() - k; i++){
+        string aux = line.substr(i,k);  
+        gt.insert(aux);
+        estimator.update(aux);
+        //cout<<aux<<endl;
+      }
+    }
+  return estimator;
+}
+
 // Importante: hash<string> usa 8 bytes
 
 int main(int argc, char *argv[]) {
-    // vector<unsigned long long> numeros;
-    // numeros.push_back(0);
-    // numeros.push_back(1);
-    // numeros.push_back(2);
-    // numeros.push_back(3);
-    // numeros.push_back(4);
-    // numeros.push_back(5);
 
-    // cerr << numeros.at(0) << " " << __builtin_ctzll(numeros.at(0)) << endl;
-    // cerr << numeros.at(1) << " " << __builtin_ctzll(numeros.at(1)) << endl;
-    // cerr << numeros.at(2) << " " << __builtin_ctzll(numeros.at(2)) << endl;
-    // cerr << numeros.at(3) << " " << __builtin_ctzll(numeros.at(3)) << endl;
-    // cerr << numeros.at(4) << " " << __builtin_ctzll(numeros.at(4)) << endl;
-    // cerr << numeros.at(5) << " " << __builtin_ctzll(numeros.at(5)) << endl;
-
-    // cerr << pow(2,3) << " " << pow(2, 10);
-
-    // return 0;
-    //
     ifstream file(argv[1]); //el archivo se entrega como argumento
-    int k = 3; //tamaño del kmer
-    vector<string> gnm;
-    char str[k];
-    while(file.read(str,k)){
-      for(int i = 0; i < k-1; i++) file.unget();
-      string aux(str);
-      gnm.push_back(aux);
+    unordered_set<string> gt; //ground truth de la cardinalidad real
+
+    if(argc < 3){
+      Hyperloglog hll = readStream<Hyperloglog>(gt, file, Buckets);
+      cout<<"Estimacion HLL: "<<hll.estimate()<<endl;
+      PCSA pcsa = readStream<PCSA>(gt, file, Buckets);
+      cout<<"Estimacion PCSA: "<<pcsa.estimate()<<endl;
+    }
+    else if(strcmp(argv[2],"hll") == 0){ 
+      Hyperloglog hll = readStream<Hyperloglog>(gt, file, Buckets);
+      cout<<"Estimacion HLL: "<<hll.estimate()<<endl;
+    }
+    else if(strcmp(argv[2],"pcsa") == 0){
+      PCSA pcsa = readStream<PCSA>(gt, file, Buckets);
+      cout<<"Estimacion PCSA: "<<pcsa.estimate()<<endl;
     }
 
-    PCSA pcsa(Buckets);
-    pcsa.showSketch();
-    unsigned long long estimacion = pcsa.estimate();
-    cerr << "estimacion: " << estimacion << endl;
+    
+    cout<<"Cardinalidad real: "<<gt.size()<<endl;
+    
+    /*
+    else{
+      PCSA pcsa(Buckets);
+      pcsa.showSketch();
+      unsigned long long estimacion = pcsa.estimate();
+      cerr << "estimacion: " << estimacion << endl;
 
-    string s = "Lucas";
-    Kmer kmer("ATTACG");
-    cout << kmer.genoma() << endl;
-    pcsa.update(kmer.genoma());
-    pcsa.showSketch();
-    estimacion = pcsa.estimate();
-    cerr << "estimacion: " << estimacion << endl;
+      string s = "Lucas";
+      Kmer kmer("ATTACG");
+      cout << kmer.genoma() << endl;
+      pcsa.update(kmer.genoma());
+      pcsa.showSketch();
+      estimacion = pcsa.estimate();
+      cerr << "estimacion: " << estimacion << endl;
 
-    pruebaCaracter('G', kmer, pcsa);
-    pruebaCaracter('C', kmer, pcsa);
-    pruebaCaracter('T', kmer, pcsa);
-    pruebaCaracter('A', kmer, pcsa);
-    pruebaCaracter('C', kmer, pcsa);
+      pruebaCaracter('G', kmer, pcsa);
+      pruebaCaracter('C', kmer, pcsa);
+      pruebaCaracter('T', kmer, pcsa);
+      pruebaCaracter('A', kmer, pcsa);
+      pruebaCaracter('C', kmer, pcsa);
+    }
+    */
     
     // Kmer kmer("ATTACG");
     // cout << kmer.genoma() << endl;

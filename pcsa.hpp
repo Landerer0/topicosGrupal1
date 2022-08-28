@@ -14,7 +14,8 @@ class PCSA {
         ~PCSA();
         void update(string); // se ingresa un kmer y se actualizan los valores del kmer
         unsigned long long estimate(); // se estima el valor de elementos actuales
-        
+        void intersection(PCSA &pcsa);
+        void merge(PCSA &pcsa);
         
         void showSketch(); // auxiliar para poder imprimir el contenido del sketch
 };
