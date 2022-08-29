@@ -38,7 +38,6 @@ template <typename T> T readStream(unordered_set<string> &gt, ifstream &file, un
     }
   return estimator;
 }
-
 // Importante: hash<string> usa 8 bytes
 
 int main(int argc, char *argv[]) {

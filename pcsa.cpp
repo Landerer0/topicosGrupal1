@@ -67,7 +67,6 @@ void PCSA::merge(PCSA &pcsa){
     return;
 }
 
-
 void PCSA::intersection(PCSA &pcsa){
     if(buckets == pcsa.buckets){
         for(int i=0;i<buckets;i++){
@@ -76,4 +75,16 @@ void PCSA::intersection(PCSA &pcsa){
     }
     
     return;
+}
+
+unsigned long long PCSA::jaccard(PCSA &other){
+    PCSA copy = this;
+
+    unsigned long long firstSetEstimate, secondSetEstimate, mergeEstimate;
+    firstSetEstimate = copy.estimate();
+    secondSetEstimate = other.estimate();
+    copy.merge(other);
+    mergeEstimate = copy.estimate();
+
+    return (firstSetEstimate + secondSetEstimate - mergeEstimate)/mergeEstimate;
 }
