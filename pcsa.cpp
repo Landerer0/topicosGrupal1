@@ -77,6 +77,24 @@ void PCSA::intersection(PCSA &pcsa){
     return;
 }
 
+unsigned long long PCSA::diferencia(PCSA &pcsa){
+    PCSA copy = this;
+    setEstimate = copy.estimate();
+    intersectionEstimate = copy.intersection(pcsa).estimate();
+
+    return setEstimate - intersectionEstimate;
+}
+
+unsigned long long PCSA::diferenciaSimetrica(PCSA &pcsa){
+    PCSA copy = this;
+    firstSetEstimate = copy.estimate();
+    secondSetEstimate = pcsa.estimate();
+    
+    intersectionEstimate = copy.intersection(pcsa).estimate();
+
+    return firstSetEstimate + secondSetEstimate - intersectionEstimate;
+}
+
 unsigned long long PCSA::jaccard(PCSA &other){
     PCSA copy = this;
 

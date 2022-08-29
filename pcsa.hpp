@@ -17,8 +17,10 @@ class PCSA {
         
         void merge(PCSA &pcsa);
         void intersection(PCSA &pcsa);
+        unsigned long long diferencia(PCSA &pcsa);
+        unsigned long long diferenciaSimetrica(PCSA &pcsa);
         
-        unsigned long long jaccard(PCSA &pcsa);
+        unsigned long long jaccard(PCSA &other);
         
         void showSketch(); // auxiliar para poder imprimir el contenido del sketch
 };
