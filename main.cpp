@@ -6,27 +6,16 @@
 #include <algorithm>
 #include <unordered_set>
 
-#include "kmer.hpp"
 #include "pcsa.hpp"
 #include "Hyperloglog.hpp"
 
 using namespace std;
 
 const unsigned int Buckets = 16;
-const unsigned int k = 32; //tamaño del kmer
-
-void pruebaCaracter(char caracter, Kmer &kmer, PCSA &pcsa){
-    kmer.pushBack(caracter);
-    cout << kmer.genoma() << endl;
-    pcsa.update(kmer.genoma());
-    pcsa.showSketch();
-    unsigned long long estimacion = pcsa.estimate();
-    cerr << "estimacion: " << estimacion << endl;
-}
+const unsigned int k = 31; //tamaño del kmer
 
 template <typename T> T readStream(unordered_set<string> &gt, ifstream &file, unsigned int size){
     T estimator(size);
- //Archivo -> vector de kmers
     for(string line; getline(file, line);){
       line.erase(std::remove(line.begin(), line.end(), 'N'), line.end());
       for(int i = 0; i <= line.size() - k; i++){
@@ -38,8 +27,8 @@ template <typename T> T readStream(unordered_set<string> &gt, ifstream &file, un
     }
   return estimator;
 }
-// Importante: hash<string> usa 8 bytes
 
+// Importante: hash<string> usa 8 bytes
 int main(int argc, char *argv[]) {
 
     ifstream file(argv[1]); //el archivo se entrega como argumento
@@ -59,43 +48,7 @@ int main(int argc, char *argv[]) {
       PCSA pcsa = readStream<PCSA>(gt, file, Buckets);
       cout<<"Estimacion PCSA: "<<pcsa.estimate()<<endl;
     }
-
-    
     cout<<"Cardinalidad real: "<<gt.size()<<endl;
-    
-    /*
-    else{
-      PCSA pcsa(Buckets);
-      pcsa.showSketch();
-      unsigned long long estimacion = pcsa.estimate();
-      cerr << "estimacion: " << estimacion << endl;
-
-      string s = "Lucas";
-      Kmer kmer("ATTACG");
-      cout << kmer.genoma() << endl;
-      pcsa.update(kmer.genoma());
-      pcsa.showSketch();
-      estimacion = pcsa.estimate();
-      cerr << "estimacion: " << estimacion << endl;
-
-      pruebaCaracter('G', kmer, pcsa);
-      pruebaCaracter('C', kmer, pcsa);
-      pruebaCaracter('T', kmer, pcsa);
-      pruebaCaracter('A', kmer, pcsa);
-      pruebaCaracter('C', kmer, pcsa);
-    }
-    */
-    
-    // Kmer kmer("ATTACG");
-    // cout << kmer.genoma() << endl;
-    // string s = "Lucas";
-    // kmer.pushBack('G');
-    // cout << kmer.genoma() << endl;
-    // kmer.pushBack('T');
-    // cout << kmer.genoma() << endl;
-    // cout << "String: " << s << endl;
-    // cout << "Hash: " << hash<string>{}(s) << '\n';
-    // cout << sizeof(hash<string>{}(s)) << endl;
 
     return 0;
 }

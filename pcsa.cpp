@@ -92,7 +92,7 @@ unsigned long long PCSA::diferenciaSimetrica(PCSA &pcsa){
     
     intersectionEstimate = copy.intersection(pcsa).estimate();
 
-    return firstSetEstimate + secondSetEstimate - intersectionEstimate;
+    return firstSetEstimate + secondSetEstimate - 2 * intersectionEstimate;
 }
 
 unsigned long long PCSA::jaccard(PCSA &other){
