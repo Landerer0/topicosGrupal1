@@ -5,6 +5,7 @@
 #include <math.h>
 #include <algorithm>
 #include <unordered_set>
+#include <cstring>
 
 #include "pcsa.hpp"
 #include "Hyperloglog.hpp"

@@ -78,25 +78,33 @@ void PCSA::intersection(PCSA &pcsa){
 }
 
 unsigned long long PCSA::diferencia(PCSA &pcsa){
-    PCSA copy = this;
+    PCSA copy(buckets);
+    memcpy(&copy,this,sizeof(PCSA));
+    unsigned long long setEstimate, intersectionEstimate;
+
     setEstimate = copy.estimate();
-    intersectionEstimate = copy.intersection(pcsa).estimate();
+    copy.intersection(pcsa);
+    intersectionEstimate = copy.estimate();
 
     return setEstimate - intersectionEstimate;
 }
 
 unsigned long long PCSA::diferenciaSimetrica(PCSA &pcsa){
-    PCSA copy = this;
+    PCSA copy(buckets);
+    memcpy(&copy,this,sizeof(PCSA));
+    unsigned long long firstSetEstimate, secondSetEstimate, intersectionEstimate;
+
     firstSetEstimate = copy.estimate();
     secondSetEstimate = pcsa.estimate();
-    
-    intersectionEstimate = copy.intersection(pcsa).estimate();
+    copy.intersection(pcsa);
+    intersectionEstimate = copy.estimate();
 
     return firstSetEstimate + secondSetEstimate - 2 * intersectionEstimate;
 }
 
 unsigned long long PCSA::jaccard(PCSA &other){
-    PCSA copy = this;
+    PCSA copy(buckets);
+    memcpy(&copy,this,sizeof(PCSA));
 
     unsigned long long firstSetEstimate, secondSetEstimate, mergeEstimate;
     firstSetEstimate = copy.estimate();
