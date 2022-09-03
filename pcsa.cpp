@@ -46,8 +46,7 @@ unsigned long long PCSA::estimate(){
     // se calcula la suma de los primeros '1's a la derecha de todos los bins
     unsigned long long suma = 0;
     for(int i=0; i<buckets;i++){
-        if(sketch.at(i) == 0) continue; // si el valor es 0 el conteo da 64, por lo que se salta
-        suma += __builtin_ctzll(sketch.at(i)); // aqui se debe hacer el count de los ceros
+        suma += __builtin_ctzll(~sketch.at(i)); // aqui se debe hacer el count de los ceros
     }
 
     // se calula media simple
