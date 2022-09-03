@@ -1,6 +1,7 @@
 # Ignorar la carpeta .vscode
 .vscode
 prueba
+archivosReducidos
 
 # Ignorar ejecutable
 a.exe
@@ -8,6 +9,7 @@ count_distinct.exe
 
 # Ignorar archivo de pruebas
 prueba.cpp
+crearReducido.bat
 
 # Ignorar archivo de genoma
 GCF_000308155.1_EptFus1.0_genomic.fna

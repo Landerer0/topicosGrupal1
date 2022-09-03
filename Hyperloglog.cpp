@@ -13,7 +13,7 @@ float Hyperloglog::alpha_m(){
   return phi;
 }
 
-void Hyperloglog::update(string kmer){
+void Hyperloglog::update(string &kmer){
   ull h_kmer = std::hash<std::string>{}(kmer);
 
   int log_m = (int)ceil(log2(M));

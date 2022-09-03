@@ -12,7 +12,7 @@ class PCSA {
     public:
         PCSA(unsigned int M);
         ~PCSA();
-        void update(string); // se ingresa un kmer y se actualizan los valores del kmer
+        void update(string &kmer); // se ingresa un kmer y se actualizan los valores del kmer
         unsigned long long estimate(); // se estima el valor de elementos actuales
         
         void merge(PCSA &pcsa);

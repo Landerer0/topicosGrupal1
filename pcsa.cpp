@@ -16,7 +16,7 @@ PCSA::PCSA(unsigned int M){
 PCSA::~PCSA(){
 }
 
-void PCSA::update(string kmer){
+void PCSA::update(string &kmer){
     // calcular valor hash
     unsigned long long valorHash = hash<string>{}(kmer);
 

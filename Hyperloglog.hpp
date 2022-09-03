@@ -15,7 +15,7 @@ class Hyperloglog{
   public:
     Hyperloglog(unsigned int M);
     ~Hyperloglog();
-    void update(string kmer);
+    void update(string &kmer);
     uc bucket_value(unsigned int i);
     ull estimate(); 
     void union_sk(Hyperloglog hll); //el objeto donde se llama el metodo union se utiliza para almacenar la union entre ambos sketches
