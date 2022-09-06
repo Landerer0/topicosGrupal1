@@ -11,12 +11,17 @@ class Hyperloglog{
   private:
     vector<uc> sketch; //6 bits por bucket
     unsigned int M;
-    float alpha_m(); //factor de correcion
+    double alpha_m(); //factor de correcion
   public:
     Hyperloglog(unsigned int M);
     ~Hyperloglog();
     void update(string &kmer);
     uc bucket_value(unsigned int i);
     ull estimate(); 
-    void union_sk(Hyperloglog hll); //el objeto donde se llama el metodo union se utiliza para almacenar la union entre ambos sketches
+    void merge(Hyperloglog &hll); //el objeto donde se llama el metodo union se utiliza para almacenar la union entre ambos sketches
+    ull intersection(Hyperloglog &hll);
+    ull jaccard(Hyperloglog &hll);
+    ull diferencia(Hyperloglog &hll);
+    ull diferenciaSimetrica(Hyperloglog &hll);
+
 };

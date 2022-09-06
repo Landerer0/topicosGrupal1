@@ -8,7 +8,7 @@
 #include <cstring>
 
 #include <chrono>
-#include <omp.h>
+//#include <omp.h>
 
 #include "pcsa.hpp"
 #include "Hyperloglog.hpp"
@@ -47,14 +47,14 @@ int main(int argc, char *argv[]) {
     ifstream file(argv[1]); //el archivo se entrega como argumento
     unordered_set<string> gt; //ground truth de la cardinalidad real
 
-    
     auto start = high_resolution_clock::now();
     if(argc < 3){
       //! AQUI EXISTE UN ERROR EN EL QUE LA ESTIMACIÓN DE PCSA 
       //! ES AFECTADA POR LA DE HLL, NO SE COMO
       Hyperloglog hll = readStream<Hyperloglog>(gt, file, Buckets);
       cout<<"Estimacion HLL: "<<hll.estimate()<<endl;
-      PCSA pcsa = readStream<PCSA>(gt, file, Buckets);
+      ifstream file2(argv[1]); //el archivo se entrega como argumento
+      PCSA pcsa = readStream<PCSA>(gt, file2, Buckets);
       cout<<"Estimacion PCSA: "<<pcsa.estimate()<<endl;
     }
     else if(strcmp(argv[2],"hll") == 0){ 
