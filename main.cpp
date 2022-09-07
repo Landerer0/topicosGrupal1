@@ -24,7 +24,7 @@ const int numThreads = 4; // 80-31 = 49, 49%7=0 division exacta
 template <typename T> T readStream(unordered_set<string> &gt, ifstream &file, unsigned int size){
     T estimator(size);
     int linea = 0;
-    omp_set_num_threads(numThreads);  
+    //omp_set_num_threads(numThreads);  
 
     for(string line; getline(file, line);){
       // //!OPCION CON PARALELISMO
@@ -62,7 +62,7 @@ template <typename T> T readStream(unordered_set<string> &gt, ifstream &file, un
       for(int i = 0; i <= line.size() - k; i++){
         string aux = line.substr(i,k);  
         //cerr << aux << endl;
-        //gt.insert(aux);
+        gt.insert(aux);
         estimator.update(aux);
       }
     }
@@ -95,7 +95,7 @@ int main(int argc, char *argv[]) {
     }
     auto stop = high_resolution_clock::now();
     auto duration = duration_cast<milliseconds>(stop - start);
-    //cout<<"Cardinalidad real: "<<gt.size()<<endl;
+    cout<<"Cardinalidad real: "<<gt.size()<<endl;
     cout << "Time taken by function: "
          << duration.count() << " miliseconds" << endl;
 
