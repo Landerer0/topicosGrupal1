@@ -77,8 +77,6 @@ int main(int argc, char *argv[]) {
 
     auto start = high_resolution_clock::now();
     if(argc < 3){
-      //! AQUI EXISTE UN ERROR EN EL QUE LA ESTIMACIÓN DE PCSA 
-      //! ES AFECTADA POR LA DE HLL, NO SE COMO
       Hyperloglog hll = readStream<Hyperloglog>(gt, file, Buckets);
       cout<<"Estimacion HLL: "<<hll.estimate()<<endl;
       ifstream file2(argv[1]); //el archivo se entrega como argumento
