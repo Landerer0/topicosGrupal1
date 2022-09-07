@@ -8,7 +8,7 @@
 #include <cstring>
 
 #include <chrono>
-//#include <omp.h>
+#include <omp.h>
 
 #include "pcsa.hpp"
 #include "Hyperloglog.hpp"
@@ -19,22 +19,50 @@ using namespace std::chrono;
 const unsigned int Buckets = 16;
 const unsigned int k = 31; //tamaño del kmer
 
-const int numThreads = 7; // 80-31 = 49, 49%7=0 division exacta
+const int numThreads = 4; // 80-31 = 49, 49%7=0 division exacta
 
 template <typename T> T readStream(unordered_set<string> &gt, ifstream &file, unsigned int size){
     T estimator(size);
     int linea = 0;
-    //omp_set_num_threads(7);
-    //#pragma omp parallel for
+    omp_set_num_threads(numThreads);  
+
     for(string line; getline(file, line);){
+      // //!OPCION CON PARALELISMO
+      // // cada iteracion representa a un kmer
+      // for(int i=0;i<line.size()-k;i++){
+      //   string secuencia;
+      //   int numCaracteresInvalidos = 0; // se refiere a las N encontradas en el archivo
+      //   for(int numCaracteresValidos=0; numCaracteresValidos<k; numCaracteresValidos++){
+      //     // nos ubicamos dentro de los caracteres validos
+      //     if(i+numCaracteresValidos+numCaracteresInvalidos == line.size()) break;
+
+      //     // caso de encontrar caracter invalido continuar buscando
+      //     if(line[i+numCaracteresValidos+numCaracteresInvalidos]=='N'){
+      //       numCaracteresValidos--;
+      //       numCaracteresInvalidos++;
+      //       continue;
+      //     }
+
+      //     // caracter valido
+      //     secuencia.push_back(line[i+numCaracteresValidos+numCaracteresInvalidos]);
+      //   }
+
+      //   if(secuencia.size()==k){
+      //     estimator.update(secuencia);
+      //     //gt.insert(secuencia);
+      //   }
+      // }
+
+      //! OPCION CON REMOVE
       line.erase(std::remove(line.begin(), line.end(), 'N'), line.end());
       // cerr << "line "<< linea << ": " << line << " size: " << line.size() << endl;
       // linea++;
       if(line.size() < 31) continue;
+      //#pragma omp parallel for
       for(int i = 0; i <= line.size() - k; i++){
         string aux = line.substr(i,k);  
         //cerr << aux << endl;
-        gt.insert(aux);
+        //gt.insert(aux);
         estimator.update(aux);
       }
     }
@@ -67,7 +95,7 @@ int main(int argc, char *argv[]) {
     }
     auto stop = high_resolution_clock::now();
     auto duration = duration_cast<milliseconds>(stop - start);
-    cout<<"Cardinalidad real: "<<gt.size()<<endl;
+    //cout<<"Cardinalidad real: "<<gt.size()<<endl;
     cout << "Time taken by function: "
          << duration.count() << " miliseconds" << endl;
 

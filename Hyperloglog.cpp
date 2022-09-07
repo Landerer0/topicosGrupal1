@@ -15,7 +15,7 @@ double Hyperloglog::alpha_m(){
 
 void Hyperloglog::update(string &kmer){
   ull h_kmer = hash<string>{}(kmer);
-  int log_m = (int)ceil(log2(M));
+  int log_m = (int)ceil(log2(M)); // hacerlo variable privada para ahorarse su computo en cada update
   uc p = (h_kmer >> (64 - log_m));
   ull b = h_kmer << log_m;
   uc first_one_bit = __builtin_clzll(b) + 1;
