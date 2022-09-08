@@ -28,13 +28,16 @@ template <typename T> T readStream(unordered_set<string> &gt, ifstream &file, un
     ull progreso = 0;
 
     for(string line; getline(file, line);){
+
+      // Tipo barra de progreso
       progreso++;
-      if(progreso%100000==0) cerr << progreso << endl;
+      if(progreso%100000==0) cout << progreso << endl;
+
       //!OPCION CON PARALELISMO
       // cada iteracion representa a un kmer
       
       #pragma omp parallel for
-      for(int i=0;i<line.size()-k;i++){
+      for(int i=0;i<line.size()-k;i++){ // este for es para procesar una linea en particular
         string secuencia;
         int numCaracteresInvalidos = 0; // se refiere a las N encontradas en el archivo
         for(int numCaracteresValidos=0; numCaracteresValidos<k; numCaracteresValidos++){
@@ -100,7 +103,7 @@ int main(int argc, char *argv[]) {
     auto duration = duration_cast<milliseconds>(stop - start);
     //cout<<"Cardinalidad real: "<<gt.size()<<endl;
     cout << "Time taken by function: "
-         << duration.count() << " miliseconds" << endl;
+         << (double)duration.count()/1000.0 << " seconds" << endl;
 
     return 0;
 }
