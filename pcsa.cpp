@@ -3,6 +3,7 @@
 #include <cmath>
 #include <math.h>
 #include <vector>
+#include <cstring>
 
 const double phi = 0.77351;
 

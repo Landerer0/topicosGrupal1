@@ -25,8 +25,11 @@ template <typename T> T readStream(unordered_set<string> &gt, ifstream &file, un
     T estimator(size);
     int linea = 0;
     omp_set_num_threads(numThreads);  
+    ull progreso = 0;
 
     for(string line; getline(file, line);){
+      progreso++;
+      if(progreso%100000==0) cerr << progreso << endl;
       //!OPCION CON PARALELISMO
       // cada iteracion representa a un kmer
       

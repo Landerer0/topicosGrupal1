@@ -1,4 +1,5 @@
 #include "Hyperloglog.hpp"
+#include <cstring>
 
 Hyperloglog::Hyperloglog(unsigned int M){
   this->M = M;
