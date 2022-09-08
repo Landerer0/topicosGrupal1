@@ -30,7 +30,7 @@ template <typename T> T readStream(unordered_set<string> &gt, ifstream &file, un
       //!OPCION CON PARALELISMO
       // cada iteracion representa a un kmer
       
-      //#pragma omp parallel for
+      #pragma omp parallel for
       for(int i=0;i<line.size()-k;i++){
         string secuencia;
         int numCaracteresInvalidos = 0; // se refiere a las N encontradas en el archivo
