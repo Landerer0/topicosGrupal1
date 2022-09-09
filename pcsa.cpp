@@ -36,8 +36,7 @@ void PCSA::update(string &kmer){
 
 void PCSA::showSketch(){
     cout << "Sketch: ";
-    auto it = sketch.begin();
-    for(it; it != sketch.end(); it++) {
+    for(auto it = sketch.begin() ; it != sketch.end(); it++) {
         cout << (unsigned long long) *it << " ";
     }
     cout << endl;
