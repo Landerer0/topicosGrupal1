@@ -1,12 +1,14 @@
 #include <stdlib.h>
 #include <string>
 #include <vector>
+#include <mutex> // paralelismo
 
 using namespace std;
 
 class PCSA {
     private:
         vector<unsigned long long> sketch;
+        vector<mutex*> bucketMutex; // un mutex correspondiente a cada bucket
         unsigned int buckets;
         int logBuckets; 
     public:
@@ -17,8 +19,8 @@ class PCSA {
         
         void merge(PCSA &pcsa);
         void intersection(PCSA &pcsa);
-        unsigned long long diferencia(PCSA &pcsa);
-        unsigned long long diferenciaSimetrica(PCSA &pcsa);
+        unsigned long long setDifference(PCSA &pcsa);
+        unsigned long long symmetricDifference(PCSA &pcsa);
         
         unsigned long long jaccard(PCSA &other);
         
