@@ -10,6 +10,8 @@ count_distinct.exe
 # Ignorar archivo de pruebas
 prueba.cpp
 crearReducido.bat
+genoma1000.fna
+genoma100000.fna
 
 # Ignorar archivo de genoma
 GCF_000308155.1_EptFus1.0_genomic.fna
