@@ -34,17 +34,21 @@ uc Hyperloglog::bucket_value(unsigned int i){
 ull Hyperloglog::estimate(){
   double Z = 0.0;
   unsigned int V = 0;
+
   for(uc bucket : sketch){
     Z += 1.0/(1 << (int)bucket);
     if((int)bucket == 0) V++;
   }
+
+  //cerr << Z << endl;
+
   double E = (this->M * this->M * alpha_m())/Z;
   if(E <= 2.5 * this->M){
     if(V != 0) E = this->M * log2(this->M/V);
   }
-  //else if(E > ((1.0/30.0) * two_32)){
-  //  E = -1 * two_32 * log(1.0 - (E/two_32));
-  //}
+  else if(E > ((1.0/30.0) * two_32)){
+   E = -1 * two_32 * log(1.0 - (E/two_32));
+  }
   return (ull)E; 
 }
 
