@@ -16,6 +16,7 @@ class Hyperloglog{
     int log_m;
     double alpha_m(); //factor de correcion
     double two_32;
+    double two_64;
   public:
     Hyperloglog(unsigned int M);
     ~Hyperloglog();
