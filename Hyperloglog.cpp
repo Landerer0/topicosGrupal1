@@ -4,7 +4,6 @@
 Hyperloglog::Hyperloglog(unsigned int M){
   this->M = M;
   sketch.assign(M, 0);
-  bucketMutex.assign(M,new std::mutex);
   log_m = (int)ceil(log2(M));
   two_32 = 4294967296.0;
   two_64 = (double)pow(2,64);
@@ -25,9 +24,7 @@ void Hyperloglog::update(string &kmer){
   uc first_one_bit;
   if(b==0) first_one_bit = 64;
   first_one_bit = __builtin_clzll(b) + 1;
-  bucketMutex.at(p)->lock();
   sketch[p] = max(sketch[p], first_one_bit);
-  bucketMutex.at(p)->unlock();
 }
 
 uc Hyperloglog::bucket_value(unsigned int i){

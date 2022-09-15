@@ -10,7 +10,6 @@ const double phi = 0.77351;
 PCSA::PCSA(unsigned int M){
     buckets = M; // almaceno el valor de buckets por si llega a ser necesario
     sketch.assign(M, 0); // inicializo el sketch con M buckets con el valor de 0
-    bucketMutex.assign(M,new std::mutex());
     logBuckets = (int)ceil(log2(buckets));
     //cerr << "log buckets: " << logBuckets << endl;
 }
@@ -30,9 +29,7 @@ void PCSA::update(string &kmer){
     unsigned long long rHash = ~bitsSketch & (bitsSketch + 1); // obtiene el valor para realizar update del sketch
 
     // actualizar el valor del sketch, en caso de utilizar paralelismo es necesario restringir acceso
-    bucketMutex.at(bucketCorrespondiente)->lock();
     sketch.at(bucketCorrespondiente) = sketch.at(bucketCorrespondiente) | rHash;
-    bucketMutex.at(bucketCorrespondiente)->unlock();
 
     return;
 }
