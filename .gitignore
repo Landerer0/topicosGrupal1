@@ -2,6 +2,7 @@
 .vscode
 prueba
 archivosReducidos
+genoma
 
 # Ignorar ejecutable
 a.exe
@@ -13,6 +14,9 @@ crearReducido.bat
 genoma1000.fna
 genoma100000.fna
 g1.fna
+g2.fna
+g21000.fna
+g2.zip
 
 # Ignorar archivo de genoma
 GCF_000308155.1_EptFus1.0_genomic.fna

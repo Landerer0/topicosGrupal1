@@ -6,13 +6,14 @@
 #include <cstring>
 
 const double phi = 0.77351;
+vector<mutex*> bucketMutexPCSA; // un mutex correspondiente a cada bucket
+
 
 PCSA::PCSA(unsigned int M){
     buckets = M; // almaceno el valor de buckets por si llega a ser necesario
     sketch.assign(M, 0); // inicializo el sketch con M buckets con el valor de 0
-    bucketMutex.assign(M,new std::mutex());
-    logBuckets = (int)ceil(log2(buckets));
-    //cerr << "log buckets: " << logBuckets << endl;
+    if(bucketMutexPCSA.empty()) bucketMutexPCSA.assign(M,new std::mutex()); // mutex para paralelismo
+    logBuckets = (int)ceil(log2(buckets)); // valor almacenado para no calcularlo multiples veces
 }
 
 PCSA::~PCSA(){
@@ -30,9 +31,9 @@ void PCSA::update(string &kmer){
     unsigned long long rHash = ~bitsSketch & (bitsSketch + 1); // obtiene el valor para realizar update del sketch
 
     // actualizar el valor del sketch, en caso de utilizar paralelismo es necesario restringir acceso
-    bucketMutex.at(bucketCorrespondiente)->lock();
+    bucketMutexPCSA.at(bucketCorrespondiente)->lock();
     sketch.at(bucketCorrespondiente) = sketch.at(bucketCorrespondiente) | rHash;
-    bucketMutex.at(bucketCorrespondiente)->unlock();
+    bucketMutexPCSA.at(bucketCorrespondiente)->unlock();
 
     return;
 }
@@ -67,52 +68,4 @@ void PCSA::merge(PCSA &pcsa){
     }
     
     return;
-}
-
-void PCSA::intersection(PCSA &pcsa){
-    if(buckets == pcsa.buckets){
-        for(int i=0;i<buckets;i++){
-            sketch.at(i) = sketch.at(i) & pcsa.sketch.at(i);
-        }
-    }
-    
-    return;
-}
-
-unsigned long long PCSA::setDifference(PCSA &pcsa){
-    PCSA copy(buckets);
-    memcpy(&copy,this,sizeof(PCSA));
-    unsigned long long setEstimate, intersectionEstimate;
-
-    setEstimate = copy.estimate();
-    copy.intersection(pcsa);
-    intersectionEstimate = copy.estimate();
-
-    return setEstimate - intersectionEstimate;
-}
-
-unsigned long long PCSA::symmetricDifference(PCSA &pcsa){
-    PCSA copy(buckets);
-    memcpy(&copy,this,sizeof(PCSA));
-    unsigned long long firstSetEstimate, secondSetEstimate, intersectionEstimate;
-
-    firstSetEstimate = copy.estimate();
-    secondSetEstimate = pcsa.estimate();
-    copy.intersection(pcsa);
-    intersectionEstimate = copy.estimate();
-
-    return firstSetEstimate + secondSetEstimate - 2 * intersectionEstimate;
-}
-
-unsigned long long PCSA::jaccard(PCSA &other){
-    PCSA copy(buckets);
-    memcpy(&copy,this,sizeof(PCSA));
-
-    unsigned long long firstSetEstimate, secondSetEstimate, mergeEstimate;
-    firstSetEstimate = copy.estimate();
-    secondSetEstimate = other.estimate();
-    copy.merge(other);
-    mergeEstimate = copy.estimate();
-
-    return (firstSetEstimate + secondSetEstimate - mergeEstimate)/mergeEstimate;
 }
